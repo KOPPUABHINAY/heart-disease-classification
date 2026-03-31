@@ -69,7 +69,16 @@ Sensitive information like names and SSNs has been removed.
 - Gender distribution  
 - Chest pain analysis  
 - Correlation heatmap  
-- Pairplot relationships  
+- Pairplot relationships
+
+---
+## 📊 Model Comparison
+
+| Model                | Accuracy |
+|---------------------|---------|
+| KNN                 | 83%     |
+| Logistic Regression | 80.98%     |
+| Random Forest       | 98.54%     |
 
 ---
 
