@@ -72,15 +72,31 @@ Sensitive information like names and SSNs has been removed.
 - Pairplot relationships
 
 ---
-## 📊 Model Comparison
+## 📊 Model Evaluation
 
 | Model                | Accuracy |
 |---------------------|---------|
 | KNN                 | 83%     |
-| Logistic Regression | 80.98%     |
-| Random Forest       | 98.54%     |
+| Logistic Regression | 80.98%  |
+| Random Forest (Tuned) | 84.87%  |
 
 ---
+
+### 🔁 Cross-Validation
+- Random Forest (5-fold CV): **90.15%**
+
+---
+
+## 🧠 Insights
+
+- KNN performed well after scaling.
+- Logistic Regression provided a baseline linear model.
+- Random Forest initially overfit (~98% accuracy), but after tuning, it achieved balanced performance.
+- Cross-validation score (90.15%) confirms that the model generalizes well across different data splits.
+- Random Forest is selected as the final model due to its stability and performance.
+
+---
+
 
 ## ⚙️ Tech Stack
 
