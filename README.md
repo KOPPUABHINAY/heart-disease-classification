@@ -14,3 +14,9 @@ This project predicts heart disease using machine learning.
 pip install -r requirements.txt
 python main.py
 git status
+
+## 📊 Model Performance
+
+- Model Used: (your model)
+- Accuracy: XX%
+
