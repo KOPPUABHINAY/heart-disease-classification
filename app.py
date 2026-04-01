@@ -3,53 +3,82 @@ import numpy as np
 import joblib
 
 # Page config
-st.set_page_config(page_title="Heart Disease Predictor", layout="centered")
+st.set_page_config(page_title="Heart Disease Predictor", layout="wide")
 
-# Load model and scaler
+# Load model
 model = joblib.load("model.pkl")
 scaler = joblib.load("scaler.pkl")
 
-# Title
-st.markdown("## ❤️ Heart Disease Prediction System")
-st.write("Enter patient details below to predict risk:")
+# Header
+st.markdown("""
+# ❤️ Heart Disease Prediction System
+### 🧠 AI-powered health risk assessment
+""")
 
-# Input layout (2 columns for better UI)
+st.markdown("---")
+
+# Sidebar
+st.sidebar.header("ℹ️ About")
+st.sidebar.write("""
+This app predicts the likelihood of heart disease based on patient health data.
+- Model: Random Forest
+- Accuracy: ~85%
+""")
+
+# Layout
 col1, col2 = st.columns(2)
 
 with col1:
-    age = st.number_input("Age", 1, 120, 25)
-    sex = st.selectbox("Sex (0 = Female, 1 = Male)", [0, 1])
-    cp = st.selectbox("Chest Pain Type (0–3)", [0, 1, 2, 3])
-    trestbps = st.number_input("Resting Blood Pressure", 80, 200, 120)
-    chol = st.number_input("Cholesterol", 100, 600, 200)
-    fbs = st.selectbox("Fasting Blood Sugar > 120", [0, 1])
+    st.subheader("🧾 Patient Details")
+
+    age = st.slider("Age", 1, 120, 25)
+    sex = st.selectbox("Sex", ["Female", "Male"])
+    sex = 1 if sex == "Male" else 0
+
+    cp = st.selectbox("Chest Pain Type", [0, 1, 2, 3])
+    trestbps = st.slider("Resting Blood Pressure", 80, 200, 120)
+    chol = st.slider("Cholesterol", 100, 600, 200)
+
+    fbs = st.selectbox("Fasting Blood Sugar > 120", ["No", "Yes"])
+    fbs = 1 if fbs == "Yes" else 0
 
 with col2:
-    restecg = st.selectbox("Rest ECG (0–2)", [0, 1, 2])
-    thalach = st.number_input("Max Heart Rate", 60, 220, 150)
-    exang = st.selectbox("Exercise Induced Angina", [0, 1])
-    oldpeak = st.number_input("Oldpeak", 0.0, 6.0, 1.0)
-    slope = st.selectbox("Slope (0–2)", [0, 1, 2])
-    ca = st.selectbox("Major Vessels (0–3)", [0, 1, 2, 3])
-    thal = st.selectbox("Thal (0–2)", [0, 1, 2])
+    st.subheader("📊 Medical Parameters")
 
-# Prediction button
-if st.button("🔍 Predict"):
+    restecg = st.selectbox("Rest ECG", [0, 1, 2])
+    thalach = st.slider("Max Heart Rate", 60, 220, 150)
+
+    exang = st.selectbox("Exercise Induced Angina", ["No", "Yes"])
+    exang = 1 if exang == "Yes" else 0
+
+    oldpeak = st.slider("Oldpeak", 0.0, 6.0, 1.0)
+    slope = st.selectbox("Slope", [0, 1, 2])
+    ca = st.selectbox("Major Vessels", [0, 1, 2, 3])
+    thal = st.selectbox("Thal", [0, 1, 2])
+
+st.markdown("---")
+
+# Prediction Button
+if st.button("🚀 Predict Risk"):
 
     input_data = np.array([[age, sex, cp, trestbps, chol, fbs, restecg,
                             thalach, exang, oldpeak, slope, ca, thal]])
 
-    # Scale input
     input_data = scaler.transform(input_data)
 
-    # Predict
     prediction = model.predict(input_data)
     probability = model.predict_proba(input_data)
 
-    # Output
+    risk = probability[0][1]
+
+    st.markdown("## 📈 Prediction Result")
+
     if prediction[0] == 1:
-        st.error("⚠️ High Risk of Heart Disease")
-        st.write(f"Confidence: {probability[0][1]*100:.2f}%")
+        st.error(f"⚠️ High Risk ({risk*100:.2f}% probability)")
+        st.progress(int(risk * 100))
     else:
-        st.success("✅ Low Risk of Heart Disease")
-        st.write(f"Confidence: {(1 - probability[0][1])*100:.2f}%")
+        st.success(f"✅ Low Risk ({(1-risk)*100:.2f}% confidence)")
+        st.progress(int((1 - risk) * 100))
+
+    st.markdown("---")
+    st.caption("⚡ Built with Streamlit | Machine Learning Model: Random Forest")
